@@ -125,35 +125,7 @@ Create table with:
 - Alternative Assets: Gold, Bitcoin, commodity indices
 - Statistical Significance: Note unusual moves (>2 standard deviations)
 
-### 6. Quantitative Toolkit
-- **New Models/Techniques:** From academic research
-- **Implementation Frameworks:** Code libraries, APIs, platforms
-- **Performance Metrics:** Backtesting results, Sharpe ratios
-- **Risk Management Tools:** VaR improvements, stress testing
-
-### 7. Practical Applications
-
-#### For Portfolio Managers
-- Strategy implementations from research
-- Sector allocation adjustments
-- Risk budgeting improvements
-
-#### For Risk Managers
-- Model enhancements
-- Stress testing updates
-- Regulatory compliance tools
-
-#### For Fintech Developers
-- API integrations
-- Algorithm improvements
-- Alternative data applications
-
-#### For Algorithmic Traders
-- Signal generation techniques
-- Execution optimization
-- Market microstructure insights
-
-### 8. Global Market Outlook
+### 6. Global Market Outlook
 - **Next Week's Calendar:** FOMC meetings, economic releases, earnings
 - **Geopolitical Events:** Elections, trade negotiations, summits
 - **Technical Analysis:** Support/resistance levels, options expiration
@@ -213,28 +185,6 @@ Create table with:
 ## Weekly Customization Variables
 
 - **Week Dates:** `[START_DATE]` to `[END_DATE]`
-- **Issue Number:** Increment from previous week
 - **Focus Theme:** Adapt based on week's dominant story
 - **Calendar Events:** Customize outlook section for upcoming events
 
-## Example Search Queries
-
-```
-"S&P 500" "July 29" "2025" earnings record high
-arXiv quantitative finance "published:2025-07-29"
-"FOMC meeting" "July 30 2025" Powell press conference
-"Tesla earnings Q2 2025" revenue guidance
-"algorithmic trading" "machine learning" "2025" academic paper
-```
-
-## Usage
-
-1. Replace `[START_DATE]` and `[END_DATE]` with the specific week's dates
-2. Execute the research protocol systematically
-3. Compile content according to the structure requirements
-4. Generate LaTeX output following the specifications
-5. Review for quality standards compliance
-
----
-
-**Note:** This prompt should be executed with specific week dates filled in, ensuring comprehensive coverage of quantitative finance developments for investment professionals.
