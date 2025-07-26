@@ -1,0 +1,466 @@
+\documentclass[11pt,a4paper]{article}
+
+% ===== PACKAGES =====
+\usepackage[top=0.8in, bottom=1in, left=0.9in, right=0.9in]{geometry}
+\usepackage{fontspec}
+\usepackage{amsmath,amsfonts,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{tcolorbox}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{tabularx}
+\usepackage{colortbl}
+\usepackage{afterpage}
+\usepackage{lipsum} % Remove in production
+\usepackage{datetime2}
+
+% ===== FONTS =====
+% \setmainfont{Source Sans Pro} % Uncomment if available
+% \setsansfont{Source Sans Pro} % Uncomment if available
+% \setmonofont{Fira Code} % Uncomment if available
+
+% ===== COLOR SCHEME =====
+\definecolor{primaryblue}{RGB}{20,56,128}      % Deep professional blue
+\definecolor{accentblue}{RGB}{41,128,185}      % Lighter blue for accents
+\definecolor{darkgray}{RGB}{52,58,64}          % Dark gray for text
+\definecolor{lightgray}{RGB}{248,249,250}     % Light gray for backgrounds
+\definecolor{mediumgray}{RGB}{173,181,189}    % Medium gray for borders
+\definecolor{successgreen}{RGB}{40,167,69}    % Green for positive values
+\definecolor{dangerred}{RGB}{220,53,69}       % Red for negative values
+\definecolor{warningorange}{RGB}{255,193,7}   % Orange for warnings
+\definecolor{tablealternate}{RGB}{252,253,254} % Table row alternating color
+
+% ===== TCOLORBOX STYLES =====
+\tcbuselibrary{skins,breakable}
+
+% Executive Summary Box
+\newtcolorbox{execsummary}{
+    enhanced,
+    arc=3pt,
+    colback=lightgray,
+    colframe=primaryblue,
+    boxrule=0.8pt,
+    left=8pt,
+    right=8pt,
+    top=8pt,
+    bottom=8pt,
+    fonttitle=\bfseries\color{primaryblue},
+    title=Executive Summary,
+    breakable
+}
+
+% Key Highlights Box
+\newtcolorbox{highlights}{
+    enhanced,
+    arc=3pt,
+    colback=accentblue!10,
+    colframe=accentblue,
+    boxrule=0.8pt,
+    left=6pt,
+    right=6pt,
+    top=6pt,
+    bottom=6pt,
+    fonttitle=\bfseries\color{accentblue},
+    title=Week Highlights,
+    breakable
+}
+
+% Warning/Risk Box
+\newtcolorbox{riskbox}{
+    enhanced,
+    arc=3pt,
+    colback=warningorange!10,
+    colframe=warningorange,
+    boxrule=0.8pt,
+    left=6pt,
+    right=6pt,
+    top=6pt,
+    bottom=6pt,
+    fonttitle=\bfseries\color{darkorange},
+    title=Risk Alert,
+    breakable
+}
+
+% Research Spotlight Box
+\newtcolorbox{research}{
+    enhanced,
+    arc=3pt,
+    colback=successgreen!10,
+    colframe=successgreen,
+    boxrule=0.8pt,
+    left=6pt,
+    right=6pt,
+    top=6pt,
+    bottom=6pt,
+    fonttitle=\bfseries\color{successgreen},
+    title=Research Spotlight,
+    breakable
+}
+
+% ===== HYPERREF CONFIGURATION =====
+\hypersetup{
+    colorlinks=true,
+    linkcolor=primaryblue,
+    filecolor=primaryblue,
+    urlcolor=accentblue,
+    citecolor=primaryblue,
+    pdfauthor={The Quant Brief},
+    pdfsubject={Investment Professional Newsletter},
+    pdfkeywords={quantitative finance, investment, markets, analysis}
+}
+
+% ===== HEADER AND FOOTER =====
+\pagestyle{fancy}
+\fancyhf{}
+
+% Header
+\fancyhead[L]{
+    \begin{minipage}{0.4\textwidth}
+        \color{primaryblue}\textbf{\Large The Quant Brief}\\
+        \color{darkgray}\footnotesize Professional Investment Intelligence
+    \end{minipage}
+}
+\fancyhead[R]{
+    \begin{minipage}{0.4\textwidth}
+        \raggedleft
+        \color{darkgray}\footnotesize Issue \#XX | \DTMtoday\\
+        \color{mediumgray}\footnotesize Confidential \& Proprietary
+    \end{minipage}
+}
+
+% Footer
+\fancyfoot[L]{\color{mediumgray}\footnotesize \copyright~2025 The Quant Brief}
+\fancyfoot[C]{\color{primaryblue}\textbf{\thepage}}
+\fancyfoot[R]{\color{mediumgray}\footnotesize \href{mailto:contact@quantbrief.com}{contact@quantbrief.com}}
+
+% Header rule
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{primaryblue}\leaders\hrule height \headrulewidth\hfill}}
+\renewcommand{\footrulewidth}{0.3pt}
+\renewcommand{\footrule}{\hbox to\headwidth{\color{mediumgray}\leaders\hrule height \footrulewidth\hfill}}
+
+% ===== SECTION STYLING =====
+\titleformat{\section}
+    {\Large\bfseries\color{primaryblue}}
+    {}
+    {0em}
+    {}
+    [\vspace{-0.5em}\color{primaryblue}\titlerule[0.8pt]\vspace{0.3em}]
+
+\titleformat{\subsection}
+    {\large\bfseries\color{darkgray}}
+    {}
+    {0em}
+    {}
+    [\vspace{-0.3em}\color{mediumgray}\titlerule[0.4pt]\vspace{0.2em}]
+
+\titleformat{\subsubsection}
+    {\normalsize\bfseries\color{accentblue}}
+    {}
+    {0em}
+    {}
+
+% ===== CUSTOM COMMANDS =====
+
+% Key metrics with colored backgrounds
+\newcommand{\metric}[2]{\colorbox{lightgray}{\textbf{#1: #2}}}
+\newcommand{\posmetric}[2]{\colorbox{successgreen!20}{\textbf{#1: #2}}}
+\newcommand{\negmetric}[2]{\colorbox{dangerred!20}{\textbf{#1: #2}}}
+
+% Emphasis styles
+\newcommand{\highlight}[1]{\textcolor{primaryblue}{\textbf{#1}}}
+\newcommand{\emphasis}[1]{\textcolor{accentblue}{\textbf{#1}}}
+\newcommand{\ticker}[1]{\texttt{\textcolor{darkgray}{#1}}}
+
+% Performance indicators
+\newcommand{\up}[1]{\textcolor{successgreen}{$\uparrow$ #1}}
+\newcommand{\down}[1]{\textcolor{dangerred}{$\downarrow$ #1}}
+\newcommand{\flat}[1]{\textcolor{mediumgray}{$\rightarrow$ #1}}
+
+% Research citation
+\newcommand{\researchcite}[3]{%
+    \textit{#1} by \textbf{#2}\\
+    \href{#3}{\textcolor{accentblue}{\footnotesize #3}}
+}
+
+% Quick stats table
+\newcommand{\quickstat}[2]{%
+    \begin{tabular}{@{}ll@{}}
+        \textbf{#1:} & #2 \\
+    \end{tabular}
+}
+
+% ===== TABLE STYLES =====
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}}
+
+% Market data table style
+\newenvironment{markettable}[1][Key Market Indicators]{%
+    \begin{table}[h]
+    \centering
+    \caption{#1}
+    \footnotesize
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{@{}llcccc@{}}
+    \toprule
+    \rowcolor{primaryblue!10}
+    \textbf{Asset} & \textbf{Level} & \textbf{1D} & \textbf{1W} & \textbf{YTD} & \textbf{Vol} \\
+    \midrule
+}{%
+    \bottomrule
+    \end{tabular}
+    \end{table}
+}
+
+% Performance table with alternating colors
+\newenvironment{perftable}[1][Performance Summary]{%
+    \begin{table}[h]
+    \centering
+    \caption{#1}
+    \footnotesize
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabular}{@{}lcccc@{}}
+    \toprule
+    \rowcolor{primaryblue!10}
+    \textbf{Strategy} & \textbf{Return} & \textbf{Sharpe} & \textbf{MaxDD} & \textbf{Status} \\
+    \midrule
+}{%
+    \bottomrule
+    \end{tabular}
+    \end{table}
+}
+
+% ===== TITLE PAGE COMPONENTS =====
+\newcommand{\titleheader}{%
+    \begin{center}
+        \color{primaryblue}
+        \rule{\textwidth}{2pt}
+        \vspace{0.3cm}
+        
+        {\Huge\textbf{The Quant Brief}}
+        
+        \vspace{0.2cm}
+        {\Large Professional Investment Intelligence}
+        
+        \vspace{0.3cm}
+        \color{darkgray}
+        {\large Weekly Analysis for Investment Professionals}
+        
+        \vspace{0.2cm}
+        \color{mediumgray}
+        {\normalsize Issue \#XX | \DTMtoday}
+        
+        \vspace{0.3cm}
+        \color{primaryblue}
+        \rule{\textwidth}{2pt}
+    \end{center}
+}
+
+% Two-column layout starter
+\newcommand{\starttwocol}{\begin{multicols}{2}}
+\newcommand{\endtwocol}{\end{multicols}}
+
+% Section break with decorative line
+\newcommand{\sectionbreak}{%
+    \vspace{0.5cm}
+    \begin{center}
+        \color{mediumgray}
+        \rule{0.3\textwidth}{0.4pt}
+    \end{center}
+    \vspace{0.3cm}
+}
+
+% ===== DOCUMENT START =====
+\begin{document}
+
+% ===== TITLE PAGE =====
+\thispagestyle{empty}
+\titleheader
+
+\vspace{1cm}
+
+\begin{highlights}
+\textbf{Market Snapshot:} Major indices posted [X\%] gains | VIX at [X.XX] indicates [sentiment] | [Key event] drives sector rotation | Fed policy expectations shift following [development]
+
+\textbf{Research Focus:} New quantitative framework for [topic] | Breakthrough in [methodology] | Risk management advances in [area]
+
+\textbf{Week Ahead:} [Key event] on [date] | [Economic release] expected to show [trend] | [Company] earnings likely to indicate [sector health]
+\end{highlights}
+
+\vspace{0.5cm}
+
+\begin{execsummary}
+[Insert 150-200 word executive summary covering the week's dominant themes, key market movements, policy developments, and forward-looking implications for investment professionals. This should be the most concise yet comprehensive overview of all critical developments affecting quantitative investment strategies.]
+\end{execsummary}
+
+\newpage
+
+% ===== MAIN CONTENT =====
+
+\section{Market Overview \& Performance}
+
+\subsection{Global Equity Markets}
+
+\begin{markettable}
+\ticker{SPX} & 6,XXX.XX & \up{+X.X\%} & \up{+X.X\%} & \up{+XX.X\%} & XX.X \\
+\rowcolor{tablealternate}
+\ticker{NDX} & XX,XXX.XX & \down{-X.X\%} & \up{+X.X\%} & \up{+XX.X\%} & XX.X \\
+\ticker{STOXX} & XXX.XX & \flat{+X.X\%} & \up{+X.X\%} & \up{+X.X\%} & XX.X \\
+\rowcolor{tablealternate}
+\ticker{NKY} & XX,XXX & \up{+X.X\%} & \down{-X.X\%} & \up{+X.X\%} & XX.X \\
+\end{markettable}
+
+[Detailed analysis of equity market performance, including sector rotation, style factors, and regional divergences. Include statistical significance of moves and correlation analysis.]
+
+\subsection{Fixed Income \& Credit}
+
+\starttwocol
+\textbf{Treasury Yields:}
+\begin{itemize}[leftmargin=*]
+    \item 2Y: \metric{}{X.XX\%} (\up{+Xbps})
+    \item 10Y: \metric{}{X.XX\%} (\down{-Xbps})
+    \item 30Y: \metric{}{X.XX\%} (\flat{+Xbps})
+\end{itemize}
+
+\textbf{Credit Spreads:}
+\begin{itemize}[leftmargin=*]
+    \item IG: \metric{}{XXXbps} (\down{-Xbps})
+    \item HY: \metric{}{XXXbps} (\up{+XXbps})
+\end{itemize}
+\endtwocol
+
+[Analysis of fixed income markets, yield curve dynamics, credit spread movements, and implications for portfolio allocation.]
+
+\section{Research Spotlight}
+
+\begin{research}
+\researchcite{Title of Key Research Paper}{Author Names}{https://arxiv.org/abs/XXXX.XXXXX}
+\end{research}
+
+\subsection{Quantitative Framework Analysis}
+
+[Detailed analysis of 2-3 recent academic papers relevant to quantitative finance, including methodology review, empirical results, and practical implementation guidance for investment professionals.]
+
+\subsubsection{Implementation Considerations}
+
+[Specific guidance on how portfolio managers, risk managers, and algorithmic traders can implement the research findings in practice.]
+
+\section{Earnings \& Corporate Analysis}
+
+\subsection{Sector Performance Review}
+
+\begin{perftable}
+Technology & \up{+X.X\%} & X.XX & -X.X\% & \textcolor{successgreen}{Strong} \\
+\rowcolor{tablealternate}
+Healthcare & \down{-X.X\%} & X.XX & -X.X\% & \textcolor{warningorange}{Neutral} \\
+Financials & \up{+X.X\%} & X.XX & -X.X\% & \textcolor{successgreen}{Strong} \\
+\rowcolor{tablealternate}
+Energy & \down{-X.X\%} & X.XX & -XX.X\% & \textcolor{dangerred}{Weak} \\
+\end{perftable}
+
+[Analysis of major earnings reports, including beat/miss rates, guidance revisions, margin trends, and sector-specific developments.]
+
+\section{Quantitative Toolkit}
+
+\subsection{Model Updates \& Enhancements}
+
+[Description of new quantitative models, backtesting results, implementation frameworks, and performance metrics.]
+
+\subsection{Risk Management Tools}
+
+\begin{riskbox}
+\textbf{VaR Model Enhancement:} New expectile-based approach shows X\% improvement in tail risk prediction accuracy during volatile periods.
+
+\textbf{Correlation Monitoring:} Cross-asset correlations showing signs of regime change - monitor closely for portfolio diversification impacts.
+\end{riskbox}
+
+[Updates to risk management frameworks, stress testing procedures, and regulatory compliance tools.]
+
+\section{Alternative Data \& Technology}
+
+\subsection{Sentiment Analysis Integration}
+
+[Analysis of alternative data sources, sentiment indicators, satellite data applications, and machine learning model deployments.]
+
+\subsection{Market Microstructure Insights}
+
+[High-frequency data analysis, order flow patterns, liquidity conditions, and execution algorithm performance.]
+
+\section{Global Macro \& Policy}
+
+\subsection{Central Bank Communications}
+
+[Analysis of Federal Reserve, ECB, Bank of Japan, and other major central bank communications, policy shifts, and market implications.]
+
+\subsection{Geopolitical Risk Assessment}
+
+[Evaluation of trade tensions, regulatory changes, political developments, and their quantitative impacts on portfolio positioning.]
+
+\sectionbreak
+
+\section{Week Ahead: Calendar \& Catalysts}
+
+\subsection{Economic Releases}
+
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Date} & \textbf{Release} & \textbf{Impact} \\
+\midrule
+Monday & Manufacturing PMI & Medium \\
+\rowcolor{tablealternate}
+Wednesday & FOMC Meeting & High \\
+Friday & Employment Report & High \\
+\bottomrule
+\end{tabular}
+
+\subsection{Earnings Calendar}
+
+[Key earnings reports expected, with focus on market-moving companies and sector representatives.]
+
+\subsection{Risk Events}
+
+[Options expiration dates, policy deadlines, geopolitical events, and other binary outcome catalysts.]
+
+\section{Portfolio Implementation}
+
+\subsection{Tactical Allocation Recommendations}
+
+[Specific recommendations for portfolio managers on sector allocation, style tilts, geographic exposure, and risk positioning.]
+
+\subsection{Hedge Strategies}
+
+[Options strategies, currency hedging, sector rotation trades, and defensive positioning recommendations.]
+
+\subsection{Quantitative Signals}
+
+[Factor model outputs, momentum indicators, mean reversion signals, and systematic strategy recommendations.]
+
+\vspace{1cm}
+
+\begin{center}
+\color{mediumgray}
+\rule{0.5\textwidth}{0.4pt}
+\end{center}
+
+\vspace{0.5cm}
+
+{\footnotesize
+\textbf{Disclaimer:} This publication is for professional investors only and does not constitute investment advice. All data as of market close [DATE]. Past performance does not guarantee future results. The Quant Brief is compiled from institutional research, academic publications, and market data sources.
+
+\textbf{Contact:} For questions or subscription information, contact \href{mailto:research@quantbrief.com}{research@quantbrief.com}
+
+\textbf{Next Issue:} [DATE] | Focus: [NEXT WEEK'S THEME]
+}
+
+\end{document}
