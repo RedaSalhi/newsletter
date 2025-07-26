@@ -1,0 +1,720 @@
+\documentclass[11pt,a4paper]{article}
+
+% =====================================================
+% THE QUANT BRIEF - PROFESSIONAL NEWSLETTER TEMPLATE
+% =====================================================
+% 
+% TEMPLATE OVERVIEW:
+% This is a comprehensive LaTeX template for creating professional
+% investment newsletters and quantitative finance reports.
+%
+% FEATURES:
+% - Professional color scheme with customizable brand colors
+% - Pre-defined content boxes (highlights, research, risks, etc.)
+% - Market data tables with automated formatting
+% - Logo integration with flexible positioning
+% - Responsive header/footer system
+% - Custom commands for financial metrics and indicators
+%
+% USAGE:
+% 1. Replace [PLACEHOLDERS] with your actual content
+% 2. Update the logo path in \logopath command
+% 3. Customize colors in the COLOR SCHEME section
+% 4. Modify company information in COMPANY INFO section
+%
+% COMPILATION:
+% Use XeLaTeX or LuaLaTeX for best font support
+% Compile twice for proper cross-references
+% =====================================================
+
+% ===== PACKAGES =====
+\usepackage[top=0.8in, bottom=1in, left=0.9in, right=0.9in]{geometry}
+\usepackage{fontspec}                    % Font selection (requires XeLaTeX/LuaLaTeX)
+\usepackage{amsmath,amsfonts,amssymb}   % Mathematical symbols and fonts
+\usepackage{graphicx}                    % Image inclusion and manipulation
+\usepackage{booktabs}                    % Professional table formatting
+\usepackage{longtable}                   % Tables spanning multiple pages
+\usepackage{array}                       % Extended array and tabular features
+\usepackage{multirow}                    % Multi-row table cells
+\usepackage{multicol}                    % Multi-column layouts
+\usepackage{hyperref}                    % Hyperlinks and PDF metadata
+\usepackage{fancyhdr}                    % Custom headers and footers
+\usepackage{xcolor}                      % Color support
+\usepackage{enumitem}                    % Customizable lists
+\usepackage{titlesec}                    % Section title formatting
+\usepackage{tcolorbox}                   % Colored boxes for highlights
+\usepackage{tikz}                        % Advanced graphics and positioning
+\usepackage{pgfplots}                    % Data plotting
+\usepackage{tabularx}                    % Flexible table column widths
+\usepackage{colortbl}                    % Colored table rows and cells
+\usepackage{afterpage}                   % Commands for next page
+\usepackage{datetime2}                   % Date and time formatting
+\usepackage{calc}                        % Length calculations
+\usepackage{ifthen}                      % Conditional commands
+
+% Remove in production - for placeholder text
+% \usepackage{lipsum}
+
+% ===== COMPANY INFORMATION =====
+% Update these commands with your organization's details
+\newcommand{\companyname}{The Quant Brief}
+\newcommand{\companytagline}{Professional Investment Intelligence}
+\newcommand{\companydescription}{Weekly Analysis for Investment Professionals}
+\newcommand{\companyemail}{contact@quantbrief.com}
+\newcommand{\researchemail}{research@quantbrief.com}
+\newcommand{\companywebsite}{www.quantbrief.com}
+\newcommand{\issuenumber}{XX} % Update for each issue
+\newcommand{\logopath}{Logo.png} % Path to your logo file
+
+% ===== FONT CONFIGURATION =====
+% Uncomment and modify these lines to use custom fonts
+% Ensure fonts are installed on your system
+% \setmainfont{Source Sans Pro}[
+%     UprightFont = *-Regular,
+%     BoldFont = *-Bold,
+%     ItalicFont = *-Italic,
+%     BoldItalicFont = *-BoldItalic
+% ]
+% \setsansfont{Source Sans Pro}
+% \setmonofont{Fira Code}[Scale=0.9]
+
+% ===== COLOR SCHEME =====
+% Primary brand colors - Jet Black and Crimson/Burgundy theme
+\definecolor{jetblack}{RGB}{26,26,26}            % Primary brand color (Jet Black)
+\definecolor{crimson}{RGB}{220,20,60}            % Secondary brand color (Crimson)
+\definecolor{burgundy}{RGB}{128,0,32}            % Accent color (Burgundy)
+\definecolor{logocolor}{RGB}{220,20,60}          % Logo accent color
+
+% Define the "Anthropic beige" color
+\definecolor{anthropicbeige}{RGB}{243, 241, 235} % or tweak as needed
+
+% Set the background color
+\pagecolor{anthropicbeige}
+\color{black}
+
+
+% Content colors - Anthropic light gray theme
+\definecolor{darkgray}{RGB}{26,26,26}            % Primary text color (Jet Black)
+\definecolor{lightgray}{RGB}{240,240,240}       % Background highlights (Anthropic Light Gray)
+\definecolor{mediumgray}{RGB}{108,117,125}      % Borders and subtle text
+\definecolor{tablealternate}{RGB}{245,245,245}  % Alternating table rows (slightly darker Anthropic gray)
+
+% Compatibility aliases for existing commands
+\definecolor{primaryblue}{RGB}{26,26,26}         % Maps to jet black
+\definecolor{accentblue}{RGB}{220,20,60}         % Maps to crimson
+
+% Status and indicator colors
+\definecolor{successgreen}{RGB}{40,167,69}      % Positive performance
+\definecolor{dangerred}{RGB}{220,53,69}         % Negative performance  
+\definecolor{warningorange}{RGB}{255,193,7}     % Caution/neutral
+\definecolor{darkorange}{RGB}{255,140,0}        % Warning text
+
+% ===== LOGO INTEGRATION =====
+% Logo positioning and sizing commands
+\newlength{\logowidth}
+\setlength{\logowidth}{2.5cm} % Adjust logo size here
+
+% Logo command with optional sizing
+\newcommand{\insertlogo}[1][\logowidth]{%
+    \IfFileExists{\logopath}{%
+        \includegraphics[width=#1]{\logopath}%
+    }{%
+        % Fallback if logo file not found - creates a placeholder
+        \begin{tikzpicture}
+            \node[rectangle, draw=crimson, fill=crimson!10, 
+                  minimum width=#1, minimum height=0.6cm] 
+                  {\textcolor{crimson}{\textbf{LOGO}}};
+        \end{tikzpicture}%
+    }%
+}
+
+% ===== TCOLORBOX STYLES =====
+% Custom colored boxes for different content types
+\tcbuselibrary{skins,breakable}
+
+% Executive Summary Box - for key takeaways
+\newtcolorbox{execsummary}{
+    enhanced,
+    arc=3pt,
+    colback=lightgray,
+    colframe=jetblack,
+    boxrule=0.8pt,
+    left=12pt,
+    right=12pt,
+    top=10pt,
+    bottom=10pt,
+    fonttitle=\large\bfseries\color{jetblack},
+    title=Executive Summary,
+    breakable,
+    shadow={1mm}{-1mm}{0mm}{black!20}
+}
+
+% Weekly Highlights Box - for key market movements
+\newtcolorbox{highlights}{
+    enhanced,
+    arc=3pt,
+    colback=crimson!8,
+    colframe=crimson,
+    boxrule=0.8pt,
+    left=10pt,
+    right=10pt,
+    top=8pt,
+    bottom=8pt,
+    fonttitle=\large\bfseries\color{crimson},
+    title=Week Highlights,
+    breakable,
+    shadow={1mm}{-1mm}{0mm}{black!15}
+}
+
+% Risk Alert Box - for warnings and important notices
+\newtcolorbox{riskbox}{
+    enhanced,
+    arc=3pt,
+    colback=burgundy!12,
+    colframe=burgundy,
+    boxrule=0.8pt,
+    left=10pt,
+    right=10pt,
+    top=8pt,
+    bottom=8pt,
+    fonttitle=\large\bfseries\color{burgundy},
+    title=Risk Alert,
+    breakable,
+    shadow={1mm}{-1mm}{0mm}{black!15}
+}
+
+% Research Spotlight Box - for academic papers and analysis
+\newtcolorbox{research}{
+    enhanced,
+    arc=3pt,
+    colback=jetblack!8,
+    colframe=jetblack,
+    boxrule=0.8pt,
+    left=10pt,
+    right=10pt,
+    top=8pt,
+    bottom=8pt,
+    fonttitle=\large\bfseries\color{jetblack},
+    title=Research Spotlight,
+    breakable,
+    shadow={1mm}{-1mm}{0mm}{black!15}
+}
+
+% Market Update Box - for current market conditions
+\newtcolorbox{marketupdate}{
+    enhanced,
+    arc=3pt,
+    colback=crimson!6,
+    colframe=crimson,
+    boxrule=0.8pt,
+    left=10pt,
+    right=10pt,
+    top=8pt,
+    bottom=8pt,
+    fonttitle=\large\bfseries\color{crimson},
+    title=Market Update,
+    breakable,
+    shadow={1mm}{-1mm}{0mm}{black!15}
+}
+
+% ===== HYPERREF CONFIGURATION =====
+% PDF metadata and link styling
+\hypersetup{
+    colorlinks=true,
+    linkcolor=jetblack,
+    filecolor=jetblack,
+    urlcolor=crimson,
+    citecolor=jetblack,
+    pdfauthor={\companyname},
+    pdfsubject={Investment Professional Newsletter},
+    pdfkeywords={quantitative finance, investment, markets, analysis},
+    pdftitle={\companyname~- Issue \#\issuenumber}
+}
+
+% ===== HEADER AND FOOTER CONFIGURATION =====
+\pagestyle{fancy}
+\fancyhf{} % Clear all header and footer fields
+
+% Header design with logo integration
+\fancyhead[L]{
+    \begin{minipage}{0.15\textwidth}
+        \insertlogo[1.8cm]
+    \end{minipage}%
+    \begin{minipage}{0.55\textwidth}
+        \color{jetblack}\textbf{\Large \companyname}\\
+        \color{darkgray}\footnotesize \companytagline
+    \end{minipage}
+}
+
+\fancyhead[R]{
+    \begin{minipage}{0.25\textwidth}
+        \raggedleft
+        \color{darkgray}\footnotesize Issue \#\issuenumber\\
+        \color{darkgray}\footnotesize \DTMtoday\\
+        \color{mediumgray}\tiny Confidential \& Proprietary
+    \end{minipage}
+}
+
+% Footer design
+\fancyfoot[L]{\color{mediumgray}\footnotesize \copyright~2025 \companyname}
+\fancyfoot[C]{\color{crimson}\textbf{\thepage}}
+\fancyfoot[R]{\color{mediumgray}\footnotesize \href{mailto:\companyemail}{\companyemail}}
+
+% Header and footer rules
+\renewcommand{\headrulewidth}{0.8pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{jetblack}\leaders\hrule height \headrulewidth\hfill}}
+\renewcommand{\footrulewidth}{0.4pt}
+\renewcommand{\footrule}{\hbox to\headwidth{\color{mediumgray}\leaders\hrule height \footrulewidth\hfill}}
+
+% ===== SECTION STYLING =====
+% Custom section headers with rules and colors
+\titleformat{\section}
+    {\Large\bfseries\color{jetblack}}
+    {}
+    {0em}
+    {}
+    [\vspace{-0.5em}\color{jetblack}\titlerule[0.8pt]\vspace{0.3em}]
+
+\titleformat{\subsection}
+    {\large\bfseries\color{darkgray}}
+    {}
+    {0em}
+    {}
+    [\vspace{-0.3em}\color{mediumgray}\titlerule[0.4pt]\vspace{0.2em}]
+
+\titleformat{\subsubsection}
+    {\normalsize\bfseries\color{crimson}}
+    {}
+    {0em}
+    {}
+
+% ===== CUSTOM COMMANDS FOR FINANCIAL DATA =====
+
+% Basic metric display commands
+\newcommand{\metric}[2]{\colorbox{lightgray}{\textbf{#1: #2}}}
+\newcommand{\posmetric}[2]{\colorbox{successgreen!20}{\textbf{#1: #2}}}
+\newcommand{\negmetric}[2]{\colorbox{dangerred!20}{\textbf{#1: #2}}}
+
+% Text emphasis commands
+\newcommand{\highlight}[1]{\textcolor{jetblack}{\textbf{#1}}}
+\newcommand{\emphasis}[1]{\textcolor{crimson}{\textbf{#1}}}
+\newcommand{\ticker}[1]{\texttt{\textcolor{darkgray}{#1}}}
+
+% Performance direction indicators
+\newcommand{\up}[1]{\textcolor{successgreen}{$\uparrow$ #1}}
+\newcommand{\down}[1]{\textcolor{dangerred}{$\downarrow$ #1}}
+\newcommand{\flat}[1]{\textcolor{mediumgray}{$\rightarrow$ #1}}
+
+% Volatility and risk indicators
+\newcommand{\vol}[1]{\textcolor{crimson}{\textbf{σ:} #1}}
+\newcommand{\sharpe}[1]{\textcolor{jetblack}{\textbf{SR:} #1}}
+\newcommand{\maxdd}[1]{\textcolor{dangerred}{\textbf{MDD:} #1}}
+
+% Research citation formatting
+\newcommand{\researchcite}[3]{%
+    \textit{#1} by \textbf{#2}\\
+    \href{#3}{\textcolor{crimson}{\footnotesize #3}}
+}
+
+% Quick statistics display
+\newcommand{\quickstat}[2]{%
+    \begin{tabular}{@{}ll@{}}
+        \textbf{#1:} & #2 \\
+    \end{tabular}
+}
+
+% ===== TABLE COLUMN TYPES =====
+% Custom column types for professional table formatting
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}}
+
+% ===== PROFESSIONAL TABLE ENVIRONMENTS =====
+
+% Market data table - for displaying current market levels
+\newenvironment{markettable}[1][Key Market Indicators]{%
+    \begin{table}[h]
+    \centering
+    \caption{#1}
+    \footnotesize
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabular}{@{}llcccc@{}}
+    \toprule
+    \rowcolor{jetblack!10}
+    \textbf{Asset} & \textbf{Level} & \textbf{1D} & \textbf{1W} & \textbf{YTD} & \textbf{Vol} \\
+    \midrule
+}{%
+    \bottomrule
+    \end{tabular}
+    \end{table}
+}
+
+% Performance table - for strategy and portfolio performance
+\newenvironment{perftable}[1][Performance Summary]{%
+    \begin{table}[h]
+    \centering
+    \caption{#1}
+    \footnotesize
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabular}{@{}lcccc@{}}
+    \toprule
+    \rowcolor{jetblack!10}
+    \textbf{Strategy} & \textbf{Return} & \textbf{Sharpe} & \textbf{MaxDD} & \textbf{Status} \\
+    \midrule
+}{%
+    \bottomrule
+    \end{tabular}
+    \end{table}
+}
+
+% Economic calendar table - for upcoming events
+\newenvironment{calendartable}[1][Economic Calendar]{%
+    \begin{table}[h]
+    \centering
+    \caption{#1}
+    \footnotesize
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabular}{@{}llcc@{}}
+    \toprule
+    \rowcolor{jetblack!10}
+    \textbf{Date} & \textbf{Event} & \textbf{Impact} & \textbf{Previous} \\
+    \midrule
+}{%
+    \bottomrule
+    \end{tabular}
+    \end{table}
+}
+
+% ===== TITLE PAGE DESIGN =====
+% Enhanced title page with logo and professional layout
+\newcommand{\titleheader}{%
+    \begin{center}
+        % Logo and title section
+        \vspace{0.5cm}
+        \insertlogo[4cm]
+        
+        \vspace{0.8cm}
+        \color{jetblack}
+        \rule{\textwidth}{2pt}
+        \vspace{0.4cm}
+        
+        {\Huge\textbf{\companyname}}
+        
+        \vspace{0.3cm}
+        {\Large \companytagline}
+        
+        \vspace{0.4cm}
+        \color{darkgray}
+        {\large \companydescription}
+        
+        \vspace{0.3cm}
+        \color{mediumgray}
+        {\normalsize Issue \#\issuenumber~|~\DTMtoday}
+        
+        \vspace{0.4cm}
+        \color{jetblack}
+        \rule{\textwidth}{2pt}
+        \vspace{0.5cm}
+    \end{center}
+}
+
+% ===== LAYOUT HELPER COMMANDS =====
+% Multi-column layout helpers
+\newcommand{\starttwocol}{\begin{multicols}{2}}
+\newcommand{\endtwocol}{\end{multicols}}
+
+% Decorative section breaks
+\newcommand{\sectionbreak}{%
+    \vspace{0.5cm}
+    \begin{center}
+        \color{mediumgray}
+        \rule{0.3\textwidth}{0.4pt}
+    \end{center}
+    \vspace{0.3cm}
+}
+
+% Page break with style
+\newcommand{\styledpagebreak}{%
+    \vspace{0.5cm}
+    \begin{center}
+        \color{crimson}
+        \rule{0.5\textwidth}{0.6pt}
+    \end{center}
+    \newpage
+}
+
+% ===== DOCUMENT CONTENT BEGINS =====
+\begin{document}
+
+% ===== TITLE PAGE =====
+\thispagestyle{empty} % Remove header/footer from title page
+\titleheader
+
+\vspace{1cm}
+
+% WEEKLY HIGHLIGHTS BOX
+% Update this section with current week's key developments
+\begin{highlights}
+\textbf{Market Snapshot:} [Replace with current market performance - e.g., "Major indices posted +2.1\% gains"] | VIX at [XX.XX] indicates [bullish/bearish] sentiment | [Key sector] drives rotation | Fed policy expectations shift following [recent development]
+
+\textbf{Research Focus:} [Current research theme - e.g., "New quantitative framework for volatility forecasting"] | Breakthrough in [methodology] | Risk management advances in [specific area]
+
+\textbf{Week Ahead:} [Key upcoming event] on [date] | [Economic release] expected to show [trend] | [Major earnings] likely to indicate [sector health]
+\end{highlights}
+
+\vspace{0.5cm}
+
+% EXECUTIVE SUMMARY BOX
+% Provide 150-200 word strategic overview
+\begin{execsummary}
+[TEMPLATE INSTRUCTION: Insert 150-200 word executive summary covering the week's dominant themes, key market movements, policy developments, and forward-looking implications for investment professionals. This should be the most concise yet comprehensive overview of all critical developments affecting quantitative investment strategies.
+
+Example topics to cover:
+- Major market moves and their drivers
+- Policy changes and central bank communications  
+- Sector rotation and style factor performance
+- Key risk events and volatility patterns
+- Strategic positioning recommendations]
+\end{execsummary}
+
+\styledpagebreak
+
+% ===== MAIN CONTENT SECTIONS =====
+% Each section includes placeholder content and usage instructions
+
+\section{Market Overview \& Performance}
+
+\subsection{Global Equity Markets}
+
+% USAGE: Update table with current market data
+% Replace [X.XX] placeholders with actual values
+\begin{markettable}
+\ticker{SPX} & 6,XXX.XX & \up{+X.X\%} & \up{+X.X\%} & \up{+XX.X\%} & XX.X \\
+\rowcolor{tablealternate}
+\ticker{NDX} & XX,XXX.XX & \down{-X.X\%} & \up{+X.X\%} & \up{+XX.X\%} & XX.X \\
+\ticker{STOXX} & XXX.XX & \flat{+X.X\%} & \up{+X.X\%} & \up{+X.X\%} & XX.X \\
+\rowcolor{tablealternate}
+\ticker{NKY} & XX,XXX & \up{+X.X\%} & \down{-X.X\%} & \up{+X.X\%} & XX.X \\
+\ticker{FTSE} & X,XXX & \flat{+X.X\%} & \up{+X.X\%} & \up{+X.X\%} & XX.X \\
+\end{markettable}
+
+% CONTENT GUIDANCE: Include detailed analysis covering:
+% - Statistical significance of price movements
+% - Sector rotation patterns and factor performance
+% - Regional divergences and correlation analysis
+% - Volume and breadth indicators
+[Replace with detailed analysis of equity market performance, including sector rotation, style factors, and regional divergences. Include statistical significance of moves and correlation analysis.]
+
+\subsection{Fixed Income \& Credit Markets}
+
+\starttwocol
+\textbf{Treasury Yields:}
+\begin{itemize}[leftmargin=*]
+    \item 2Y: \metric{}{X.XX\%} (\up{+Xbps})
+    \item 5Y: \metric{}{X.XX\%} (\down{-Xbps})
+    \item 10Y: \metric{}{X.XX\%} (\down{-Xbps})
+    \item 30Y: \metric{}{X.XX\%} (\flat{+Xbps})
+\end{itemize}
+
+\textbf{Credit Spreads:}
+\begin{itemize}[leftmargin=*]
+    \item IG: \metric{}{XXXbps} (\down{-Xbps})
+    \item HY: \metric{}{XXXbps} (\up{+XXbps})
+    \item EM: \metric{}{XXXbps} (\flat{+Xbps})
+\end{itemize}
+\endtwocol
+
+% CONTENT GUIDANCE: Cover yield curve dynamics, credit conditions, and duration risk
+[Replace with analysis of fixed income markets, yield curve dynamics, credit spread movements, and implications for portfolio allocation.]
+
+\subsection{Currency \& Commodities}
+
+% USAGE: Add currency and commodity performance data
+[Add analysis of major currency pairs, commodity performance, and cross-asset correlations]
+
+\section{Research Spotlight}
+
+% USAGE: Feature 1-2 key research papers relevant to practitioners
+\begin{research}
+\researchcite{[Paper Title]}{[Author Names]}{[URL or DOI]}
+
+\textbf{Key Findings:} [Summarize main results and methodology]
+
+\textbf{Implementation:} [Practical applications for investment professionals]
+\end{research}
+
+\subsection{Quantitative Framework Analysis}
+
+% CONTENT GUIDANCE: Detailed analysis of recent academic papers
+% Include methodology review, empirical results, and implementation guidance
+[Replace with detailed analysis of 2-3 recent academic papers relevant to quantitative finance, including methodology review, empirical results, and practical implementation guidance for investment professionals.]
+
+\subsubsection{Implementation Considerations}
+
+% USAGE: Provide specific guidance for practical implementation
+[Replace with specific guidance on how portfolio managers, risk managers, and algorithmic traders can implement the research findings in practice.]
+
+\section{Risk Management \& Portfolio Analytics}
+
+\subsection{Current Risk Environment}
+
+% USAGE: Customize risk alerts based on current market conditions
+\begin{riskbox}
+\textbf{Volatility Regime Change:} [Description of current volatility patterns and implications]
+
+\textbf{Correlation Alert:} [Analysis of changing cross-asset correlations]
+
+\textbf{Tail Risk Assessment:} [Current tail risk indicators and portfolio implications]
+\end{riskbox}
+
+\subsection{Portfolio Construction Insights}
+
+% CONTENT GUIDANCE: Include factor analysis, allocation recommendations
+[Add factor model outputs, correlation analysis, and portfolio optimization insights]
+
+\section{Sector Analysis \& Earnings Review}
+
+\subsection{Sector Performance Summary}
+
+% USAGE: Update with current sector performance data
+\begin{perftable}
+Technology & \up{+X.X\%} & X.XX & -X.X\% & \textcolor{successgreen}{Strong} \\
+\rowcolor{tablealternate}
+Healthcare & \down{-X.X\%} & X.XX & -X.X\% & \textcolor{warningorange}{Neutral} \\
+Financials & \up{+X.X\%} & X.XX & -X.X\% & \textcolor{successgreen}{Strong} \\
+\rowcolor{tablealternate}
+Energy & \down{-X.X\%} & X.XX & -XX.X\% & \textcolor{dangerred}{Weak} \\
+Materials & \flat{+X.X\%} & X.XX & -X.X\% & \textcolor{warningorange}{Neutral} \\
+\end{perftable}
+
+\subsection{Earnings Analysis}
+
+% CONTENT GUIDANCE: Cover earnings trends, guidance, margin analysis
+[Replace with analysis of major earnings reports, including beat/miss rates, guidance revisions, margin trends, and sector-specific developments.]
+
+\section{Alternative Data \& Technology}
+
+\subsection{Sentiment \& Flow Analysis}
+
+% CONTENT GUIDANCE: Include alternative data insights
+[Replace with analysis of alternative data sources, sentiment indicators, fund flows, and positioning data.]
+
+\subsection{Market Microstructure}
+
+% CONTENT GUIDANCE: Cover execution quality, liquidity, order flow
+[Replace with high-frequency data analysis, order flow patterns, liquidity conditions, and execution algorithm performance.]
+
+\section{Global Macro \& Policy Outlook}
+
+\subsection{Central Bank Watch}
+
+% CONTENT GUIDANCE: Analyze policy communications and expectations
+[Replace with analysis of Federal Reserve, ECB, Bank of Japan, and other major central bank communications, policy shifts, and market implications.]
+
+\subsection{Geopolitical Risk Monitor}
+
+% CONTENT GUIDANCE: Assess political and regulatory developments
+[Replace with evaluation of trade relations, regulatory changes, political developments, and their quantitative impacts on portfolio positioning.]
+
+\sectionbreak
+
+\section{Week Ahead: Events \& Catalysts}
+
+\subsection{Economic Calendar}
+
+% USAGE: Update with upcoming economic releases
+\begin{calendartable}
+Monday & Manufacturing PMI & Medium & XX.X \\
+\rowcolor{tablealternate}
+Wednesday & FOMC Meeting & High & N/A \\
+Thursday & GDP Release & High & X.X\% \\
+\rowcolor{tablealternate}
+Friday & Employment Report & High & XXXk \\
+\end{calendartable}
+
+\subsection{Earnings \& Corporate Events}
+
+% USAGE: List key earnings and corporate events
+[Replace with key earnings reports expected, with focus on market-moving companies and sector representatives.]
+
+\subsection{Technical \& Options Analysis}
+
+% CONTENT GUIDANCE: Include technical levels and options positioning
+[Add key technical levels, options expiration impacts, and positioning data]
+
+\section{Investment Strategy \& Implementation}
+
+\subsection{Tactical Positioning}
+
+% CONTENT GUIDANCE: Provide specific allocation recommendations
+[Replace with specific recommendations for portfolio managers on sector allocation, style tilts, geographic exposure, and risk positioning.]
+
+\subsection{Quantitative Signals}
+
+% CONTENT GUIDANCE: Include systematic strategy signals
+[Replace with factor model outputs, momentum indicators, mean reversion signals, and systematic strategy recommendations.]
+
+\subsection{Risk Management Tools}
+
+% CONTENT GUIDANCE: Provide hedging and risk mitigation strategies
+[Replace with options strategies, currency hedging, sector rotation trades, and defensive positioning recommendations.]
+
+\vspace{1cm}
+
+% ===== FOOTER SECTION =====
+\begin{center}
+\color{mediumgray}
+\rule{0.6\textwidth}{0.6pt}
+\end{center}
+
+\vspace{0.5cm}
+
+% DISCLAIMER AND CONTACT INFORMATION
+{\footnotesize
+\textbf{Disclaimer:} This publication is for professional investors only and does not constitute investment advice. All data as of market close [DATE]. Past performance does not guarantee future results. \companyname~is compiled from institutional research, academic publications, and market data sources.
+
+\textbf{Contact Information:}
+\begin{itemize}[leftmargin=*, noitemsep]
+    \item General inquiries: \href{mailto:\companyemail}{\companyemail}
+    \item Research questions: \href{mailto:\researchemail}{\researchemail}
+    \item Website: \href{https://\companywebsite}{\companywebsite}
+\end{itemize}
+
+\textbf{Next Issue:} [DATE] | Focus: [NEXT WEEK'S THEME]
+
+\textbf{Subscription:} For institutional subscription information, contact \href{mailto:\companyemail}{\companyemail}
+}
+
+\end{document}
+
+% =====================================================
+% TEMPLATE CUSTOMIZATION GUIDE
+% =====================================================
+%
+% 1. LOGO SETUP:
+%    - Place your logo file in the same directory as this .tex file
+%    - Update \logopath command with your logo filename
+%    - Adjust \logowidth if needed for proper scaling
+%
+% 2. BRANDING:
+%    - Update company information commands at the top
+%    - Modify colors in the COLOR SCHEME section
+%    - Customize fonts in FONT CONFIGURATION section
+%
+% 3. CONTENT WORKFLOW:
+%    - Replace all [PLACEHOLDER] text with actual content
+%    - Update tables with current market data
+%    - Add charts and graphs using tikz/pgfplots
+%    - Customize tcolorbox themes for your content types
+%
+% 4. COMPILATION:
+%    - Use XeLaTeX or LuaLaTeX for best results
+%    - Ensure all required packages are installed
+%    - Compile twice for proper cross-references
+%
+% 5. AUTOMATION:
+%    - Consider using scripts to populate market data tables
+%    - Implement automated date/issue number updates
+%    - Connect to data feeds for real-time market information
+%
+% =====================================================
