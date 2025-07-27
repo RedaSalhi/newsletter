@@ -31,7 +31,7 @@
 >
 >    * Trade, elections, sanctions, financial regulation
 >
-> Provide concise summaries (2–3 sentences) per bullet and flag anything unexpected or market-moving. Use a professional tone suitable for an institutional investment newsletter.
+> Use a professional tone suitable for an institutional investment newsletter.
 
 ---
 
@@ -41,15 +41,14 @@
 
 > **Prompt:**
 > I have a professional LaTeX newsletter template for quantitative finance called "The Quant Brief". Please complete the template covering the week **start** to **end** issue using relevant financial market data and strategic commentary. Fill in the executive summary, weekly highlights, sector performance, risk overview, geopolitical events, central bank outlook, and investment strategy. Use realistic data and provide professional, research-driven insights tailored to institutional investors.
-
-Instructions:
-
-Use bullet points where relevant (e.g., earnings, fund flows)
-Keep tone concise, analytical, and professional
-Include current index levels, macro indicators (e.g., 10Y yield, VIX), and top sector trends
-Provide commentary on FX, commodities, and factor performance
-Cite recent research or key geopolitical news impacting markets
-Output format should match LaTeX structure with \begin{...} and \command{...} blocks where applicable.
+>
+> Instructions:
+> Use bullet points where relevant (e.g., earnings, fund flows)
+> Keep tone concise, analytical, and professional
+> Include current index levels, macro indicators (e.g., 10Y yield, VIX), and top sector trends
+> Provide commentary on FX, commodities, and factor performance
+> Cite recent research or key geopolitical news impacting markets
+> Output format should match LaTeX structure with \begin{...} and \command{...} blocks where applicable.
 
 
 
